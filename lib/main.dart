@@ -70,19 +70,20 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
   void _initializeAnimations() {
     // Fade animation for the whole content
     _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
 
     // Scale animation for logo
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
 
@@ -91,9 +92,10 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-      CurvedAnimation(parent: _slideController, curve: Curves.easeOut),
-    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOut));
 
     // Start animations
     _fadeController.forward();
@@ -105,7 +107,7 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
 
   Future<void> _checkLoginStatus() async {
     // Wait for 3.5 seconds to show splash animation
-    await Future.delayed(const Duration(milliseconds: 3500));
+    await Future.delayed(const Duration(milliseconds: 15000));
 
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
@@ -113,6 +115,7 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
     if (mounted) {
       if (isLoggedIn) {
         // User was previously logged in, go to dashboard
+        // done by provding routes in the GlobApp
         Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
         // User was not logged in, go to login
@@ -137,10 +140,7 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFF0F5FF),
-              Color(0xFFF5F9E6),
-            ],
+            colors: [Color(0xFFF0F5FF), Color(0xFFF5F9E6)],
           ),
         ),
         child: FadeTransition(
@@ -158,35 +158,17 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: primaryBlue.withValues(alpha: 0.15),
-                          blurRadius: 30,
-                          spreadRadius: 5,
-                        ),
-                      ],
+                      color: const Color(0xFFF0F5FF),
+                      
                     ),
                     child: Image.asset(
-                      "assets/images/Final_logo.png",
+                      "assets/images/Globin_preview.png",
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [primaryBlue, darkBlue],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.health_and_safety_rounded,
-                              size: 70,
-                              color: Colors.white,
-                            ),
-                          ),
+                        return Icon(
+                          Icons.health_and_safety_rounded,
+                          size: 80,
+                          color: primaryBlue,
                         );
                       },
                     ),
@@ -210,10 +192,7 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
                                 letterSpacing: 2,
                               ),
                             ),
-                            TextSpan(
-                              text: ' ',
-                              style: TextStyle(fontSize: 32),
-                            ),
+                            TextSpan(text: ' ', style: TextStyle(fontSize: 32)),
                             TextSpan(
                               text: 'CARE',
                               style: TextStyle(
@@ -258,6 +237,7 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
     );
   }
 }
+
 //                       "assets/images/Final_logo.png",
 //                       width: 250,
 //                       height: 250,
