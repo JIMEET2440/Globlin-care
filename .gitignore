@@ -39,12 +39,14 @@ migrate_working_dir/
 /coverage/
 
 # Symbolication related
-app.*.symbols
 
 # Obfuscation related
-app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android Studio places build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+ENV_SETUP_GUIDE.md
+ENV_REFERENCE.md
+ENVIRONMENT_SETUP_SUMMARY.txt
