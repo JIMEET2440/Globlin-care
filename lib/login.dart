@@ -99,31 +99,44 @@ class LoginState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         Container(
-                          width: 70,
-                          height: 70,
+                          width: 95,
+                          height: 80,
                           padding: const EdgeInsets.all(12),
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [primaryBlue, darkBlue],
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                          ),
-                          child: const Icon(
-                            Icons.health_and_safety_rounded,
-                            size: 45,
-                            color: Colors.white,
-                          ),
+                          // decoration: const BoxDecoration(
+                          //   gradient: LinearGradient(
+                          //     begin: Alignment.topLeft,
+                          //     end: Alignment.bottomRight,
+                          //     colors: [primaryBlue, darkBlue],
+                          //   ),
+                          //   borderRadius: BorderRadius.all(Radius.circular(15)),
+                          // ),
+                          child: Image.asset(
+                            "assets/images/Globin_preview.png",fit: BoxFit.fill,
+                          )
                         ),
                         const SizedBox(height: 12),
-                        const Text(
-                          'Globin Care',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: primaryBlue,
-                            letterSpacing: 0.5,
+                         RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Globlin ',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryBlue,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'Care',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: accentGreen,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 8),

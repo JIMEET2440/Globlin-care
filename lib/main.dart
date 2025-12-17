@@ -107,12 +107,11 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
 
   Future<void> _checkLoginStatus() async {
     // Wait for 3.5 seconds to show splash animation
-    await Future.delayed(const Duration(milliseconds: 15000));
+    await Future.delayed(const Duration(milliseconds: 3500));
 
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    if (mounted) {
       if (isLoggedIn) {
         // User was previously logged in, go to dashboard
         // done by provding routes in the GlobApp
@@ -121,7 +120,7 @@ class _Splashstate extends State<Splashscreen> with TickerProviderStateMixin {
         // User was not logged in, go to login
         Navigator.pushReplacementNamed(context, '/login');
       }
-    }
+    
   }
 
   @override
