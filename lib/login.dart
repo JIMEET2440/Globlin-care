@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+import 'config/environment_config.dart';
 
 // Brand Colors
 const Color primaryBlue = Color(0xFF0052CC);
@@ -48,15 +50,26 @@ class LoginState extends State<LoginScreen> {
     final prefs = await SharedPreferences.getInstance();
     final loginType = _selectedLoginType == 0 ? 'admin' : 'user';
 
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setString('loginType', loginType);
-    await prefs.setString('userEmail', _emailController.text.toString());
 
+    await prefs.setString('loginType', loginType);
+    if (loginType.length < 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill a 10 digit Number')),
+      );
       setState(() {
         _isLoading = false;
       });
+      return;
+    }
+    await prefs.setBool('isLoggedIn', true);
+    await prefs.setString('userEmail', _emailController.text.toString());
 
-      Navigator.pushReplacementNamed(context, '/dashboard');
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    Navigator.pushReplacementNamed(context, '/dashboard');
   }
 
   @override
@@ -250,18 +263,21 @@ class LoginState extends State<LoginScreen> {
                             color: primaryBlue,
                           ),
                         ),
-                        SizedBox(height: size.height * 0.025),
-
+                        SizedBox(height: size.height * 0.025),                        
                         // Email Field
                         TextField(
                           controller: _emailController,
                           keyboardType: TextInputType.number,
+                          maxLength: 10,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10),
+                          ],
                           decoration: InputDecoration(
                             hintText: 'Enter your phone',
                             labelText: 'Phone No.',
                             hintStyle: const TextStyle(fontSize: 12),
                             prefixIcon: const Icon(
-                              Icons.email_outlined,
+                              Icons.phone,
                               color: primaryBlue,
                             ),
                             border: OutlineInputBorder(

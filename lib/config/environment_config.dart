@@ -17,6 +17,7 @@ class EnvironmentConfig {
 
   /// Initialize environment configuration
   /// Must be called before accessing any environment variables
+  /// 
   static Future<void> init() async {
     if (_isInitialized) return;
 
@@ -148,10 +149,7 @@ class AppConfig {
   static String get smtpFromEmail => EnvironmentConfig.get('SMTP_FROM_EMAIL', defaultValue: 'noreply@globincare.com') ?? '';
   static String get smtpFromName => EnvironmentConfig.get('SMTP_FROM_NAME', defaultValue: 'Globin Care') ?? '';
 
-  // Twilio Configuration
-  static String get twilioAccountSid => EnvironmentConfig.get('TWILIO_ACCOUNT_SID', defaultValue: '') ?? '';
-  static String get twilioAuthToken => EnvironmentConfig.get('TWILIO_AUTH_TOKEN', defaultValue: '') ?? '';
-  static String get twilioPhoneNumber => EnvironmentConfig.get('TWILIO_PHONE_NUMBER', defaultValue: '') ?? '';
+
 
   // Firebase Configuration
   static String get firebaseApiKey => EnvironmentConfig.get('FIREBASE_API_KEY', defaultValue: '') ?? '';
