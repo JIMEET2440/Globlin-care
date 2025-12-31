@@ -23,6 +23,14 @@ class SalesPageState extends State<SalesPage> {
   double discountAmount = 0.0;
 
   @override
+  void initState() {
+    super.initState();
+    // Set today's date as default, don't know why initialValue attribute not working
+    DateTime today = DateTime.now();
+    dateController.text = '${today.day}/${today.month}/${today.year}';
+  }
+
+  @override
   Widget build(BuildContext context) {
     double tax = subtotal * taxRate;
     double totalAmount = subtotal + tax - discountAmount;
@@ -38,7 +46,10 @@ class SalesPageState extends State<SalesPage> {
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 17, 0, 255),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20) ,bottomRight: Radius.circular(20)),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -120,7 +131,7 @@ class SalesPageState extends State<SalesPage> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF64748B),
+                                color: Color.fromARGB(255, 70, 82, 98),
                               ),
                             ),
                             SizedBox(height: 8),
