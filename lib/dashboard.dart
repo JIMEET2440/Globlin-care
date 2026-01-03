@@ -177,9 +177,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           isPrimary: true,
                         ),
                         _buildMenuButton(
-                          title: 'Search Order',
+                          title: 'Customers',
                           icon: Icons.search,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CustomersPage() ));
+                          },
                           isPrimary: true,
                         ),
                         _buildMenuButton(

@@ -29,15 +29,15 @@ class CustomerDatabase {
   Future<void> _createDb(Database db, int version) async {
     // Create Customers table
     // Note: Define your columns below based on your requirements
+    
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS Customers (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        phone TEXT,
-        email TEXT,
+      CREATE TABLE IF NOT EXISTS customers (
+        customer_id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        phone VARCHAR(15),
         address TEXT,
-        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
       ''');
   }
 
