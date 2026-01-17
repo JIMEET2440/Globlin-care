@@ -32,28 +32,6 @@ def get_db():
         db.close()
 
 
-def test_connection():
-    """Test MySQL connection without ORM"""
-    try:
-        connection = mysql.connector.connect(**DB_CONFIG)
-        if connection.is_connected():
-            db_info = connection.get_server_info()
-            print(f"✅ Successfully connected to MySQL Server version {db_info}")
-            
-            cursor = connection.cursor()
-            cursor.execute("SELECT DATABASE();")
-            record = cursor.fetchone()
-            print(f"✅ Connected to database: {record}")
-            cursor.close()
-            return True
-    except Error as e:
-        print(f"❌ Error while connecting to MySQL: {e}")
-        return False
-    finally:
-        if connection.is_connected():
-            connection.close()
-
-
 def create_tables():
     """Create all tables defined in models"""
     try:
@@ -64,5 +42,5 @@ def create_tables():
 
 
 if __name__ == "__main__":
-    # Test connection when running directly
-    test_connection()
+    # Create tables when running directly
+    create_tables()
