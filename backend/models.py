@@ -9,12 +9,14 @@ from database import Base
 
 class Customer(Base):
     """Customer table model"""
+
     __tablename__ = "customers"
-    
+
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
-    phone = Column(String(10))
-    Area = Column(Text)
+    name = Column(String(50), nullable=False)
+    phone = Column(String(15), nullable=False, unique=True)
+    area = Column(String(30), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     # created_at = Column(DateTime(timezone=True), server_default=func.now())
     # updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
