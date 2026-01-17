@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'customer_database.dart';
 
 class Customer {
   String id;
@@ -53,9 +54,9 @@ class _CustomersPageState extends State<CustomersPage> {
   /// TODO: Replace with actual database query
   Future<List<Customer>> _fetchCustomersFromDatabase() async {
     // Example implementation with your database:
-    // final db = await DatabaseHelper.instance.database;
-    // final List<Map<String, dynamic>> maps = await db.query('customers');
-    // return List.generate(maps.length, (i) => Customer.fromMap(maps[i]));
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> maps = await db.query('customers');
+    return List.generate(maps.length, (i) => Customer.fromMap(maps[i]));
 
     // Simulating network delay - remove this when connecting to real database
     await Future.delayed(Duration(milliseconds: 500));

@@ -11,23 +11,22 @@ class CustomerCreate(BaseModel):
     """Schema for creating a new customer"""
     name: str
     phone: Optional[str] = None
-    Area: Optional[str] = None
+    area: Optional[str] = None
 
 
 class CustomerUpdate(BaseModel):
     """Schema for updating customer"""
     name: Optional[str] = None
     phone: Optional[str] = None
-    address: Optional[str] = None
+    area: Optional[str] = None
 
 
 class CustomerResponse(BaseModel):
     """Schema for customer response"""
     id: int
     name: str
-    email: str
     phone: Optional[str]
-    address: Optional[str]
+    area: Optional[str]
     created_at: datetime
     
     class Config:
