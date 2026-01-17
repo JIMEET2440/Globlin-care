@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
-import 'customer_database.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+// API Base URL - read from .env (set `API_BASE_URL`) with a fallback
+final String API_BASE_URL = "http://localhost:8000";
 
 class Customer {
-  String id;
+  int id;
   String name;
   String phone;
   String area;
+  DateTime createdAt;
 
   Customer({
     required this.id,
     required this.name,
     required this.phone,
     required this.area,
+    required this.createdAt,
   });
 
-  // Convert Customer to Map for database insertion
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'name': name, 'phone': phone, 'area': area};
+  // Convert Customer to JSON for API requests
+  Map<String, dynamic> toJson() {
+    return {'name': name, 'phone': phone, 'Area': area};
   }
 
-  // Create Customer from database Map
-  factory Customer.fromMap(Map<String, dynamic> map) {
+  // Create Customer from API response JSON
+  factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
-      id: map['id'] ?? '',
-      name: map['name'] ?? '',
-      phone: map['phone'] ?? '',
-      area: map['area'] ?? '',
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      phone: json['phone'] ?? '',
+      area: json['area'] ?? '',
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
     );
   }
 }
@@ -47,74 +57,104 @@ class _CustomersPageState extends State<CustomersPage> {
   }
 
   // ============================================================
-  // DATABASE METHODS - Connect your database logic here
+  // API METHODS - Backend HTTP calls
   // ============================================================
 
-  /// Fetches all customers from the database
-  /// TODO: Replace with actual database query
+  /// Fetches all customers from the backend API
   Future<List<Customer>> _fetchCustomersFromDatabase() async {
-    // Example implementation with your database:
-    final db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> maps = await db.query('customers');
-    return List.generate(maps.length, (i) => Customer.fromMap(maps[i]));
+    try {
+      final response = await http
+          .get(Uri.parse('$API_BASE_URL/customers'))
+          .timeout(
+            Duration(seconds: 10),
+            onTimeout: () => throw Exception('Request timeout'),
+          );
 
-    // Simulating network delay - remove this when connecting to real database
-    await Future.delayed(Duration(milliseconds: 500));
-
-    // Return empty list - customers will come from database
-    return [];
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => Customer.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to fetch customers: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching customers: $e');
+    }
   }
 
-  /// Adds a new customer to the database
-  /// TODO: Replace with actual database insert
+  /// Adds a new customer via the backend API
   Future<Customer?> _addCustomerToDatabase(
     String name,
     String phone,
     String area,
   ) async {
-    // Example implementation with your database:
-    // final db = await DatabaseHelper.instance.database;
-    // final id = await db.insert('customers', {
-    //   'name': name,
-    //   'phone': phone,
-    //   'area': area,
-    // });
-    // return Customer(id: 'C${id.toString().padLeft(3, '0')}', name: name, phone: phone, area: area);
+    try {
+      final response = await http.post(
+            Uri.parse('$API_BASE_URL/customers'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'name': name, 'phone': phone, 'Area': area}),
+          )
+          .timeout(
+            Duration(seconds: 10),
+            onTimeout: () => throw Exception('Request timeout'),
+          );
 
-    // Temporary: Generate ID locally - replace with database auto-generated ID
-    final newId = 'C${(customers.length + 1).toString().padLeft(3, '0')}';
-    return Customer(id: newId, name: name, phone: phone, area: area);
+      if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        return Customer.fromJson(data);
+      } else {
+        throw Exception('Failed to add customer: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error adding customer: $e');
+    }
   }
 
-  /// Updates an existing customer in the database
-  /// TODO: Replace with actual database update
+  /// Updates an existing customer via the backend API
   Future<bool> _updateCustomerInDatabase(Customer customer) async {
-    // Example implementation with your database:
-    // final db = await DatabaseHelper.instance.database;
-    // final result = await db.update(
-    //   'customers',
-    //   customer.toMap(),
-    //   where: 'id = ?',
-    //   whereArgs: [customer.id],
-    // );
-    // return result > 0;
+    try {
+      final response = await http
+          .put(
+            Uri.parse('$API_BASE_URL/customers/${customer.id}'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'name': customer.name,
+              'phone': customer.phone,
+              'address': customer.area,
+            }),
+          )
+          .timeout(
+            Duration(seconds: 10),
+            onTimeout: () => throw Exception('Request timeout'),
+          );
 
-    return true;
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to update customer: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error updating customer: $e');
+    }
   }
 
-  /// Deletes a customer from the database
-  /// TODO: Replace with actual database delete
-  Future<bool> _deleteCustomerFromDatabase(String customerId) async {
-    // Example implementation with your database:
-    // final db = await DatabaseHelper.instance.database;
-    // final result = await db.delete(
-    //   'customers',
-    //   where: 'id = ?',
-    //   whereArgs: [customerId],
-    // );
-    // return result > 0;
+  /// Deletes a customer via the backend API
+  Future<bool> _deleteCustomerFromDatabase(int customerId) async {
+    try {
+      final response = await http
+          .delete(Uri.parse('$API_BASE_URL/customers/$customerId'))
+          .timeout(
+            Duration(seconds: 10),
+            onTimeout: () => throw Exception('Request timeout'),
+          );
 
-    return true;
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to delete customer: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error deleting customer: $e');
+    }
   }
 
   // ============================================================
@@ -305,6 +345,7 @@ class _CustomersPageState extends State<CustomersPage> {
                             name: nameController.text,
                             phone: phoneController.text,
                             area: areaController.text,
+                            createdAt: DateTime.now()
                           );
                           await _handleUpdateCustomer(index, updatedCustomer);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -582,7 +623,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   ),
                   child: Center(
                     child: Text(
-                      customer.id,
+                      customer.id.toString(),
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
